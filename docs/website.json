@@ -1,0 +1,19 @@
+{
+    "title": "rust-cli-tool-scaffold",
+    "sidebar": [
+        {
+            "text": "Reference",
+            "items": [
+                { "text": "Changelog", "link": "/changelog" }
+            ]
+        },
+        {
+            "text": "Get Involved",
+            "items": [
+                { "text": "Contributing", "link": "/contributing" },
+                { "text": "Development", "link": "/development" },
+                { "text": "Releasing", "link": "/releasing" }
+            ]
+        }
+    ]
+}

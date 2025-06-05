@@ -1,3 +1,3 @@
-# rust-cli-tool-scaffold
+# nano-ledger
 
 Document your project here

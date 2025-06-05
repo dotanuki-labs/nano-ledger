@@ -34,8 +34,8 @@ COPY --from=extras --chmod=444 \
 COPY --from=extras --chmod=444 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=extras --chmod=444 /usr/share/zoneinfo /usr/share/zoneinfo
 
-COPY --from=builder /src/target/release/rust-cli-tool-scaffold /bin/rust-cli-tool-scaffold
+COPY --from=builder /src/target/release/nano-ledger /bin/nano-ledger
 
 WORKDIR /tmp
 
-ENTRYPOINT ["/bin/rust-cli-tool-scaffold"]
+ENTRYPOINT ["/bin/nano-ledger"]

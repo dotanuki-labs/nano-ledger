@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 use crate::SharedState;
+use crate::journal::JournalEntry;
 use axum::Json;
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
@@ -9,10 +10,19 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
 pub enum MovementType {
     Debit,
     Credit,
+}
+
+impl MovementType {
+    fn opposite(&self) -> MovementType {
+        match self {
+            MovementType::Debit => MovementType::Credit,
+            MovementType::Credit => MovementType::Debit,
+        }
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -138,7 +148,24 @@ pub async fn new_transaction(
         amount_in_cents: payload.amount_in_cents,
     };
 
+    // Create double-entries
+    let left_entry = JournalEntry {
+        created_at: Utc::now(),
+        entry_id: Uuid::new_v4(),
+        transaction_id: tx.transaction_id,
+        account_id: tx.lhs_account_id,
+        movement_type: tx.movement_type,
+        amount_in_cents: tx.amount_in_cents,
+    };
+
+    let right_entry = JournalEntry {
+        account_id: tx.rhs_account_id,
+        movement_type: tx.movement_type.opposite(),
+        ..left_entry.clone()
+    };
+
     // Store results
+    repos.journal.save_entries(vec![left_entry, right_entry]);
     repos.transactions.save_transaction(tx);
 
     // Return status

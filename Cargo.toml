@@ -17,7 +17,7 @@ categories = ["command-line-utilities"]
 
 [workspace.dependencies]
 nano-ledger = { path = "crates/nano-ledger" }
-xtasks-cli-tool-scaffold = { path = "crates/xtasks" }
+xtasks = { path = "crates/xtasks" }
 
 anyhow = "1.0.82"
 clap = "4.5.4"
@@ -29,6 +29,9 @@ xshell = "0.2.6"
 walkdir = "2.5.0"
 sha2 = "0.10.8"
 hex = "0.4.3"
+axum = "0.8.4"
+tokio = { version = "1.45.1", features = ["full"] }
+
 
 [profile.release]
 strip = true

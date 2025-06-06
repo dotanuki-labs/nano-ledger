@@ -2,9 +2,7 @@
 
 ## Creating accounts
 
-> [!INFO]
-> POST /accounts/new
->
+> `POST` /accounts/new
 
 - Example request to create an Account with no funds
 
@@ -46,9 +44,7 @@ date: Thu, 05 Jun 2025 19:07:43 GMT
 
 ## Fetching account details
 
-> [!INFO]
-> GET /accounts/{account_id}
->
+> `GET` /accounts/:account_id:
 
 Example request to fetch details about an Account:
 
@@ -73,9 +69,7 @@ date: Fri, 06 Jun 2025 11:36:21 GMT
 
 ## Creating a transaction
 
-> [!INFO]
-> POST /transactions/new
->
+> `POST` /transactions/new
 
 Example request to create a left-sided credit transaction
 
@@ -108,9 +102,7 @@ date: Fri, 06 Jun 2025 11:40:16 GMT
 
 ## Fetching transaction details
 
-> [!INFO]
-> GET /transactions/{transaction_id}
->
+> `GET` /transactions/:transaction_id:
 
 Example request to fetch details about a Transaction:
 
@@ -139,9 +131,7 @@ date: Fri, 06 Jun 2025 11:47:09 GMT
 
 ## Fetching journal entries
 
-> [!INFO]
-> GET /journal/transactions/{transaction_id}
->
+> GET /journal/:transaction_id:
 
 Example request to journal entries related to a Transaction:
 

@@ -2,9 +2,11 @@
 // SPDX-License-Identifier: MIT
 
 mod accounts;
+mod journal;
 mod transactions;
 
 use crate::accounts::AccountsRepository;
+use crate::journal::JournalRepository;
 use crate::transactions::TransactionsRepository;
 use axum::Router;
 use axum::routing::{get, post};
@@ -20,6 +22,7 @@ type SharedState = Arc<RwLock<Repositories>>;
 struct Repositories {
     pub accounts: AccountsRepository,
     pub transactions: TransactionsRepository,
+    pub journal: JournalRepository,
 }
 
 fn app(state: SharedState) -> Router {
@@ -28,6 +31,7 @@ fn app(state: SharedState) -> Router {
         .route("/accounts/{account_id}", get(accounts::account_details))
         .route("/transactions/new", post(transactions::new_transaction))
         .route("/transactions/{transaction_id}", get(transactions::transaction_details))
+        .route("/journal/{transaction_id}", get(journal::entries_for_transaction))
         .with_state(state)
 }
 
@@ -62,9 +66,10 @@ async fn main() {
 #[cfg(test)]
 mod tests {
     use crate::accounts::{Account, AccountsRepository, CreateNewAccount};
-    use crate::transactions::CreateNewTransaction;
+    use crate::journal::JournalEntry;
+    use crate::transactions::{CreateNewTransaction, CreatedTransaction};
     use crate::{Repositories, SharedState, app};
-    use axum::body::Body;
+    use axum::body::{Body, to_bytes};
     use http::{Method, Request, StatusCode, header};
     use serde::Serialize;
     use serde_json::json;
@@ -203,6 +208,24 @@ mod tests {
 
         // Then
         assert_eq!(response.status(), StatusCode::OK);
+
+        // Given
+        let bytes = to_bytes(response.into_body(), usize::MAX).await.unwrap();
+        let tx: CreatedTransaction = serde_json::from_slice(bytes.iter().as_slice()).unwrap();
+
+        // When
+        let entries_by_transaction = format!("/journal/{}", tx.transaction_id);
+        let request = get_request(&entries_by_transaction);
+
+        let app = crate::app(shared_state);
+        let response = app.oneshot(request).await.unwrap();
+
+        // Then
+        assert_eq!(response.status(), StatusCode::OK);
+
+        let bytes = to_bytes(response.into_body(), usize::MAX).await.unwrap();
+        let entries: Vec<JournalEntry> = serde_json::from_slice(bytes.iter().as_slice()).unwrap();
+        assert_eq!(entries.len(), 2);
     }
 
     #[tokio::test]

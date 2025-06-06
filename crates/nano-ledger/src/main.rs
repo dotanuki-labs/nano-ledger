@@ -1,22 +1,17 @@
 // Copyright 2025 Dotanuki Labs
 // SPDX-License-Identifier: MIT
 
-mod core;
+use axum::{Router, response::Html, routing::get};
 
-use clap::Parser;
+#[tokio::main]
+async fn main() {
+    let app = Router::new().route("/", get(handler));
 
-#[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
-struct ProgramArguments {
-    #[arg(short, long)]
-    name: String,
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await.unwrap();
+    println!("listening on {}", listener.local_addr().unwrap());
+    axum::serve(listener, app).await.unwrap();
 }
 
-fn main() {
-    better_panic::install();
-    human_panic::setup_panic!();
-
-    let arguments = ProgramArguments::parse();
-    let greet = core::greet(&arguments.name).expect("Expecting a greet!");
-    println!("{}", greet);
+async fn handler() -> Html<&'static str> {
+    Html("<h1>Hello, World!</h1>")
 }

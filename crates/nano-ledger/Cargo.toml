@@ -1,6 +1,6 @@
 [package]
 name = "nano-ledger"
-description = "An opinionated way to kick-off CLI apps powered by Rust"
+description = "A simple double-entry bookkeeping financial system for demo purposes "
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -10,15 +10,6 @@ repository.workspace = true
 authors.workspace = true
 license.workspace = true
 
-[package.metadata]
-msrv = "1.74.0"
-
 [dependencies]
-anyhow.workspace = true
-clap = { workspace = true, features = ["derive"] }
-human-panic.workspace = true
-better-panic.workspace = true
-
-[dev-dependencies]
-assert_cmd.workspace = true
-predicates.workspace = true
+axum.workspace = true
+tokio.workspace = true

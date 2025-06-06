@@ -2,12 +2,10 @@
 
 ## What
 
-> To do
+A simple double-entry bookkeeping financial system for demo purposes, built in Rust.
 
-## Using
-
-> To do
+Check [complete docs](https://dotanuki-labs.github.io/nano-ledger/) to learn more.
 
 ## License
 
-Copyright (c) 2025 - Dotanuki Labs - [The MIT license](https://choosealicense.com/licenses/mit)
+Copyright © 2025—Dotanuki Labs - [The MIT license](https://choosealicense.com/licenses/mit)

@@ -4,15 +4,8 @@
         {
             "text": "Reference",
             "items": [
-                { "text": "Changelog", "link": "/changelog" }
-            ]
-        },
-        {
-            "text": "Get Involved",
-            "items": [
-                { "text": "Contributing", "link": "/contributing" },
-                { "text": "Development", "link": "/development" },
-                { "text": "Releasing", "link": "/releasing" }
+                { "text": "Installing", "link": "/installing" },
+                { "text": "Using", "link": "/using" }
             ]
         }
     ]

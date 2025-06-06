@@ -30,6 +30,14 @@ impl Account {
             balance,
         }
     }
+
+    pub fn add_balance(&self, amount: u64) {
+        self.balance.checked_add(amount).unwrap();
+    }
+
+    pub fn subtract_balance(&self, amount: u64) {
+        self.balance.checked_sub(amount).unwrap();
+    }
 }
 
 #[derive(Default)]

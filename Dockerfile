@@ -36,6 +36,7 @@ COPY --from=extras --chmod=444 /usr/share/zoneinfo /usr/share/zoneinfo
 
 COPY --from=builder /src/target/release/nano-ledger /bin/nano-ledger
 
+ENV DOCKER_CONTAINER_HOST=true
 WORKDIR /tmp
 
 ENTRYPOINT ["/bin/nano-ledger"]

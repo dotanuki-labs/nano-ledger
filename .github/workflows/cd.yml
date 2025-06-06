@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  packages: write
   pages: write
   id-token: write
 
@@ -51,10 +52,17 @@ jobs:
         id: docker-metadata
         uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5
         with:
-          images: ttl.sh/${{ github.repository }}
+          images: ghcr.io/${{ github.repository }}
 
       - name: Set up docker-buildx
         uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3.10.0
+
+      - name: Log in to Github Container Registry
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build container Image
         id: build
@@ -66,7 +74,7 @@ jobs:
           labels: ${{ steps.docker-metadata.outputs.labels }}
           annotations: ${{ steps.docker-metadata.outputs.annotations }}
           outputs: type=registry,push=true
-          tags: ttl.sh/${{ github.repository }}:${{ github.sha }}-${{ matrix.build-args.platform-suffix }}
+          tags: ghcr.io/${{ github.repository }}:${{ github.sha }}-${{ matrix.build-args.platform-suffix }}
 
   docker-manifest:
     runs-on: ubuntu-24.04
@@ -76,6 +84,13 @@ jobs:
       - name: Project Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
+      - name: Log in to Github Container Registry
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3.4.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Update Docker manifest
         run: |
           docker manifest create "$latest" --amend "$package"-amd64 --amend "$package"-arm64
@@ -84,5 +99,5 @@ jobs:
           docker manifest inspect "$latest"
           docker manifest push "$latest"
         env:
-          package: ttl.sh/${{ github.repository }}:${{ github.sha }}
-          latest: ttl.sh/${{ github.repository }}:latest
+          package: ghcr.io/${{ github.repository }}:${{ github.sha }}
+          latest: ghcr.io/${{ github.repository }}:latest
